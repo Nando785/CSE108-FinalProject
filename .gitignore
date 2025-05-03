@@ -1,0 +1,6 @@
+# Ignore virtual environment
+node_modules/
+dist/
+.env
+venv/
+
