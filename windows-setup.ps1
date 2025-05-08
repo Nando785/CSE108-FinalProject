@@ -3,6 +3,9 @@
 # install react dependencies
 cd .\fits-app
 npm install
+npm install @mui/icons-material @mui/material @emotion/styled @emotion/react
+npm install react-router-dom
+
 cd ..
 
 # create virtual environment and enter it
