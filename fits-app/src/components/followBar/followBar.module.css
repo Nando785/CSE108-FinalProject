@@ -1,4 +1,4 @@
-.source{
+/* placeholder */.source{
     display: flex;
     flex-direction: column;
     /* padding-top: 20px; */
@@ -7,11 +7,4 @@
     background-color: #375676;
     height:100%;
     width:100%;
-}
-
-.button {
-    width: 100%;
-    /* background-color: #0D1B2A; */
-    background-color: #375676;
-    border:none;
 }

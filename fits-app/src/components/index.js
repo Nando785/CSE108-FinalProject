@@ -1,3 +1,3 @@
-export {default as FollowerBar} from './followerBar/followerBar';
-export {default as Sidebar} from './sidebar/sidebar';
-export {default as Header} from './header/header';
+export {default as FollowBar} from './followBar/followBar.jsx';
+export {default as Sidebar} from './sidebar/sidebar.jsx';
+export {default as Header} from './header/header.jsx';

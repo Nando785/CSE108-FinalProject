@@ -1,20 +1,25 @@
 import { useState } from 'react'
-import './spotlight.module.css'
-import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
-import AddAPhotoOutlinedIcon from '@mui/icons-material/AddAPhotoOutlined';
-import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
-import EmojiObjectsOutlinedIcon from '@mui/icons-material/EmojiObjectsOutlined';
-import { Icon } from '@mui/material'
+import styles from './spotlight.module.css'
+import { Sidebar, Header, FollowBar } from '../../components/index.js';
 
 function Spotlight() {
 
     return(
-        <div>
-            SpotlightPage
-            <ShoppingCartOutlinedIcon sx={{ fontSize: 30 }} className="icon"/> 
-            <AddAPhotoOutlinedIcon sx={{ fontSize: 30 }} className="icon"/>
-            <AccountCircleOutlinedIcon sx={{ fontSize: 30 }} className="icon"/>
-            <EmojiObjectsOutlinedIcon sx={{ fontSize: 30 }} className="icon"/>
+        <div className={styles.container}>     
+            <div className={styles.header}>
+                <Header />
+            </div>
+            <div className={styles.body}>
+                <div className={styles.sidebar}>
+                    <Sidebar />
+                </div>
+                <div className={styles.content}>
+                    Spotlight Content
+                </div>
+                <div className={styles.followBar}>
+                    <FollowBar />
+                </div>
+            </div>
         </div>
     )
 }

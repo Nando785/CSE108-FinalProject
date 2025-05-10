@@ -1,9 +1,19 @@
 import React from 'react';
+import styles from './header.module.css'
+import { useNavigate } from 'react-router-dom';
 
 function Header() {
+    const navigate = useNavigate();
     return(
-        <div>
-
+        <div className={styles.source}>
+            <div className={styles.titleContainer}>
+                Fitd.
+            </div>
+            <div className={styles.buttonContainer}>
+                <button className={styles.button} onClick={() => navigate('/')}>
+                    Log Out
+                </button>
+            </div>
         </div>
     );
 }

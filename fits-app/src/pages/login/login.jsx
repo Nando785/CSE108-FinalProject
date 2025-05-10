@@ -9,7 +9,7 @@ function Login() {
   const handleLogin = async () => {
     const username = document.querySelector('input[type="text"]').value;
     const password = document.querySelector('input[type="password"]').value;
-    console.log(username + " " + password);
+    // console.log(username + " " + password);
 
     const isValid = await validateLogin(username, password)
     if (isValid) {
