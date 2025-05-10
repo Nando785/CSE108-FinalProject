@@ -1,32 +1,32 @@
 -- User table
 CREATE TABLE user (
-    u_userId INT PRIMARY KEY AUTO_INCREMENT,
+    u_userId integer PRIMARY KEY AUTOINCREMENT,
     u_username VARCHAR(50) UNIQUE NOT NULL,
     u_password VARCHAR(255) NOT NULL,
     u_firstName VARCHAR(50),
     u_lastName VARCHAR(50),
     u_bio TEXT,
-    u_followerCnt INT DEFAULT 0,
-    u_followingCnt INT DEFAULT 0,
-    u_postCnt INT DEFAULT 0
+    u_followerCnt integer DEFAULT 0,
+    u_followingCnt integer DEFAULT 0,
+    u_postCnt integer DEFAULT 0
 );
 
 -- User Posts
 CREATE TABLE userPosts (
-    up_postId INT PRIMARY KEY AUTO_INCREMENT,
-    up_userId INT NOT NULL,
+    up_postId integer PRIMARY KEY AUTOINCREMENT,
+    up_userId integer NOT NULL,
     up_body TEXT,
-    up_likeCnt INT DEFAULT 0,
-    up_commentCnt INT DEFAULT 0,
+    up_likeCnt integer DEFAULT 0,
+    up_commentCnt integer DEFAULT 0,
     up_creationDate DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (up_userId) REFERENCES user(u_userId)
 );
 
 -- Post Comments
 CREATE TABLE postComments (
-    pc_commentId INT PRIMARY KEY AUTO_INCREMENT,
-    pc_postId INT NOT NULL,
-    pc_userId INT NOT NULL,
+    pc_commentId integer PRIMARY KEY AUTOINCREMENT,
+    pc_postId integer NOT NULL,
+    pc_userId integer NOT NULL,
     pc_body TEXT,
     pc_creationDate DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (pc_postId) REFERENCES userPosts(up_postId),
@@ -35,8 +35,8 @@ CREATE TABLE postComments (
 
 -- Follows
 CREATE TABLE follows (
-    f_userId INT NOT NULL,
-    f_followingId INT NOT NULL,
+    f_userId integer NOT NULL,
+    f_followingId integer NOT NULL,
     PRIMARY KEY (f_userId, f_followingId),
     FOREIGN KEY (f_userId) REFERENCES user(u_userId),
     FOREIGN KEY (f_followingId) REFERENCES user(u_userId)
@@ -44,9 +44,11 @@ CREATE TABLE follows (
 
 -- Saved Posts
 CREATE TABLE savedPosts (
-    sp_userId INT NOT NULL,
-    sp_postId INT NOT NULL,
+    sp_userId integer NOT NULL,
+    sp_postId integer NOT NULL,
     PRIMARY KEY (sp_userId, sp_postId),
     FOREIGN KEY (sp_userId) REFERENCES user(u_userId),
     FOREIGN KEY (sp_postId) REFERENCES userPosts(up_postId)
 );
+
+INSERT INTO user (u_username, u_password, u_firstName, u_lastName) VALUES ('username', 'password', 'John', 'Doe')

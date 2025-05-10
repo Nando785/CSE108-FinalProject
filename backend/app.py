@@ -1,11 +1,14 @@
-from flask import Flask, request, jsonify
-from flask_bcrypt import Bcrypt
-import mysql.connector
+from flask import Flask, request, jsonify, make_response
+from flask_cors import CORS
+
+from passlib.hash import bcrypt
+
 import sqlite3
 from sqlite3 import Error
 
 app = Flask(__name__)
-bcrypt = Bcrypt(app)
+CORS(app)
+# bcrypt = bcrypt(app)
 
 DB_FILE = "database.sqlite"
 
@@ -45,14 +48,15 @@ def register():
     # Extract data
     username = data.get('username')
     password = data.get('password')
-    first_name = data.get('first_name')
-    last_name = data.get('last_name')
+    first_name = data.get('firstName')
+    last_name = data.get('lastName')
 
     if not username or not password:
         return jsonify({'error': 'Username and password are required'}), 400
 
     # Hash the password
-    hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+    hashed_password = bcrypt.hash(password)
+    bcrypt.verify(password, hashed_password)
 
     try:
         conn = openConnection(DB_FILE)
@@ -75,6 +79,39 @@ def register():
         if cursor:
             cursor.close()
         closeConnection(conn, DB_FILE)
+
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.json
+    username = data.get('username')
+    password = data.get('password')
+
+    if not username or not password:
+        return jsonify({'error': 'Username and password are required'}), 400
+
+    try:
+        conn = openConnection(DB_FILE)
+        cursor = conn.cursor()
+
+        query = 'SELECT u_password FROM user WHERE u_username = ?'
+        cursor.execute(query, (username,))
+        row = cursor.fetchone()
+
+        if row and bcrypt.verify(password, row[0]):
+            print("Success")
+            return jsonify({'message': 'Login successful'}), 200
+        else:
+            print("Failure")
+            return jsonify({'error': 'Invalid username or password'}), 401
+
+    except sqlite3.Error as err:
+        return jsonify({'error': str(err)}), 500
+
+    finally:
+        if cursor:
+            cursor.close()
+        closeConnection(conn, DB_FILE)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
