@@ -1,10 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
-import Login from './pages/login/login';
-import SignUp from './pages/signUp/signUp';
-import Spotlight from './pages/spotlight/spotlight';
-import Camera from './pages/camera/camera';
-import Profile from './pages/profile/profile';
-import Search from './pages/search/search';
+import { Login, SignUp, Spotlight, Camera, Profile, Search } from './pages/index.js';
 
 function App() {
   return (
