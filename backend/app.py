@@ -163,7 +163,7 @@ def upload():
         cursor.execute('INSERT INTO images (i_userId, i_postId, i_image) VALUES (?, ?, ?)',
                   (user_id, post_id, image_data))
         conn.commit()
-        conn.close()
+        closeConnection(conn, DB_FILE)
         return 'Image uploaded successfully', 200
 
     return 'No image uploaded', 400
@@ -174,5 +174,97 @@ def check_auth():
         return jsonify({'authenticated': True, 'username': current_user.username}), 200
     return jsonify({'authenticated': False}), 401
 
+@app.route('/getInfo', methods=['POST'])
+@login_required
+def getUserData():
+    try:
+        conn = openConnection(DB_FILE)
+        cursor = conn.cursor()
+        
+        user_id = current_user.id
+        
+        query = ''' SELECT u_username, u_firstName, u_lastName, u_bio, u_followerCnt, u_followingCnt, u_postCnt
+                        FROM user WHERE u_userId = ?;'''
+        values = (user_id,)
+        cursor.execute(query, values)
+        
+        data = cursor.fetchall()
+        print(data)
+        
+        closeConnection(conn, DB_FILE)
+        
+        return jsonify({'data': data})
+    except sqlite3.Error as err:
+        return jsonify({'error': str(err)}), 500
+
+@app.route('/updateBio', methods=['POST'])
+@login_required
+def update_bio():
+    try:
+        data = request.json
+        new_bio = data.get('bio')
+        user_id = current_user.id
+
+        conn = openConnection(DB_FILE)
+        cursor = conn.cursor()
+        cursor.execute('UPDATE user SET u_bio = ? WHERE u_userId = ?', (new_bio, user_id))
+        conn.commit()
+
+        cursor.close()
+        closeConnection(conn, DB_FILE)
+
+        return jsonify({'message': 'Bio updated successfully'}), 200
+
+    except sqlite3.Error as err:
+        return jsonify({'error': str(err)}), 500
+
+@app.route('/getPosts', methods=['POST'])
+@login_required
+def getPosts():
+    try:
+        data = request.get_json()
+        username = data.get('username', None)
+
+        conn = openConnection(DB_FILE)
+        cursor = conn.cursor()
+
+        # Get user_id based on input or current_user
+        if username:
+            cursor.execute("SELECT u_userId FROM user WHERE u_username = ?", (username,))
+            result = cursor.fetchone()
+            if not result:
+                closeConnection(conn, DB_FILE)
+                return jsonify({'error': 'User not found'}), 404
+            user_id = result[0]
+        else:
+            user_id = current_user.id
+
+        # Query posts and images for the selected user_id
+        query = '''
+            SELECT i.i_image, up.up_body, up.up_likeCnt
+                FROM images i
+                JOIN userPosts up ON i.i_postId = up.up_postId
+                WHERE i.i_userId = ?
+        '''
+        cursor.execute(query, (user_id,))
+        posts = cursor.fetchall()
+
+        # Convert binary image data to base64 strings
+        from base64 import b64encode
+        post_data = [
+            {
+                'image': b64encode(row[0]).decode('utf-8'),
+                'description': row[1],
+                'likeCnt': row[2]
+            } for row in posts
+        ]
+
+        closeConnection(conn, DB_FILE)
+        return jsonify({'posts': post_data}), 200
+
+    except sqlite3.Error as err:
+        return jsonify({'error': str(err)}), 500
+
+    
 if __name__ == '__main__':
     app.run(debug=True)

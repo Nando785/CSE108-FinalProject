@@ -25,7 +25,7 @@ function Camera() {
             const response = await fetch('http://localhost:5000/upload', {
                 method: 'POST',
                 body: formData,
-                credentials: 'include', // 👈 required for session auth
+                credentials: 'include',
             });
 
             const text = await response.text();

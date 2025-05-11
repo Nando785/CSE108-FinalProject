@@ -51,4 +51,28 @@ CREATE TABLE savedPosts (
     FOREIGN KEY (sp_postId) REFERENCES userPosts(up_postId)
 );
 
-INSERT INTO user (u_username, u_password, u_firstName, u_lastName) VALUES ('username', 'password', 'John', 'Doe')
+CREATE TABLE images (
+    i_imgId integer PRIMARY KEY,
+    i_userId integer,
+    i_postId integer,
+    i_image blob,
+    FOREIGN KEY (i_userId) REFERENCES user(u_userId),
+    FOREIGN KEY (i_postId) REFERENCES userPosts(up_postId)
+);
+
+CREATE TABLE profilePictures (
+    pp_pictureId integer PRIMARY KEY AUTOINCREMENT,
+    pp_userId interger,
+    pp_image blob,
+    FOREIGN KEY (pp_userId) REFERENCES user(u_userId)
+);
+
+INSERT INTO user (u_username, u_password, u_firstName, u_lastName) VALUES ('username', 'password', 'John', 'Doe');
+
+DELETE FROM user;
+DELETE FROM userPosts;
+DELETE FROM postComments;
+DELETE FROM follows;
+DELETE FROM savedPosts;
+DELETE FROM images;
+DELETE FROM profilePictures;
