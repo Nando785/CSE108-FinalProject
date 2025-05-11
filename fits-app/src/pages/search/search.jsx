@@ -13,8 +13,11 @@ function Search() {
                 <div className={styles.sidebar}>
                     <Sidebar />
                 </div>
-                <div className={styles.content}>
-                    Search Content
+                <div className={styles.contentContainer}>
+                    <div className={styles.content}>
+                        <input className={styles.searchBar} placeholder='Enter a username'>
+                        </input>
+                    </div>
                 </div>
                 <div className={styles.followBar}>
                     <FollowBar />

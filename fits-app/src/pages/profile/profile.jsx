@@ -14,7 +14,18 @@ function Profile() {
                     <Sidebar />
                 </div>
                 <div className={styles.content}>
-                    Profile Content
+                    <div className={styles.pad}>
+                        <div className={styles.profileHeader}>
+                            <div className={styles.iconContainer}></div>
+                            <div className={styles.statsContainer}></div>
+                        </div>
+                        <div className={styles.bioContainer}>
+
+                        </div>
+                        <div className={styles.postContainer}>
+
+                        </div>
+                    </div>
                 </div>
                 <div className={styles.followBar}>
                     <FollowBar />

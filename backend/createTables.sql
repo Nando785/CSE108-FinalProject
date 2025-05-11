@@ -5,7 +5,7 @@ CREATE TABLE user (
     u_password VARCHAR(255) NOT NULL,
     u_firstName VARCHAR(50),
     u_lastName VARCHAR(50),
-    u_bio TEXT,
+    u_bio TEXT DEFAULT 'No Bio Created',
     u_followerCnt integer DEFAULT 0,
     u_followingCnt integer DEFAULT 0,
     u_postCnt integer DEFAULT 0
