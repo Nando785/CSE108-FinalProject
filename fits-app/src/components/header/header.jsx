@@ -4,13 +4,22 @@ import { useNavigate } from 'react-router-dom';
 
 function Header() {
     const navigate = useNavigate();
+
+    const handleLogout = async () => {
+        await fetch('http://localhost:5000/logout', {
+            method: 'GET',
+            credentials: 'include'
+        });
+        navigate('/');
+    };
+
     return(
         <div className={styles.source}>
             <div className={styles.titleContainer}>
                 Fitd.
             </div>
             <div className={styles.buttonContainer}>
-                <button className={styles.button} onClick={() => navigate('/')}>
+                <button className={styles.button} onClick={handleLogout}>
                     Log Out
                 </button>
             </div>
