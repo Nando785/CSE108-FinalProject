@@ -3,6 +3,8 @@ import styles from './search.module.css';
 import { Sidebar, Header, FollowBar } from '../../components/index.js';
 import axios from 'axios';
 
+const API = import.meta.env.VITE_API_URL;
+
 function Search() {
     const [query, setQuery] = useState('');
     const [results, setResults] = useState([]);
@@ -17,7 +19,7 @@ function Search() {
         }
 
         try {
-            const response = await axios.post('/api/searchUsers', { query: value }, { withCredentials: true });
+            const response = await axios.post(`${API}/api/searchUsers`, { query: value }, { withCredentials: true });
             setResults(response.data.results);
         } catch (error) {
             console.error(error);
@@ -27,9 +29,9 @@ function Search() {
     const handleToggleFollow = async (userId, isFollowing) => {
         try {
             if (isFollowing) {
-                await axios.post('/api/unfollow', { targetId: userId }, { withCredentials: true });
+                await axios.post(`${API}/api/unfollow`, { targetId: userId }, { withCredentials: true });
             } else {
-                await axios.post('/api/follow', { targetId: userId }, { withCredentials: true });
+                await axios.post(`${API}/api/follow`, { targetId: userId }, { withCredentials: true });
             }
 
             setResults(prev =>

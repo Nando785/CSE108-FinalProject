@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+const API = import.meta.env.VITE_API_URL;
 
 export function loadData() {
     // Set userData to fetchUserInfo return values
@@ -8,7 +9,7 @@ export function loadData() {
         const fetchUserInfo = async () => {
             try {
                 //API call: Get current user info from database (Fname, Lname, Username, etc...)
-                const response = await fetch('api/getInfo', {
+                const response = await fetch(`${API}/api/getInfo`, {
                     method: 'POST',
                     credentials: 'include',
                 });
@@ -38,7 +39,7 @@ export function loadPosts() {
         const fetchPosts = async () => {
             try {
                 // API call: Fetch all posts by currect user
-                const response = await fetch('api/getPosts', {
+                const response = await fetch(`${API}/api/getPosts`, {
                     method: 'POST',
                     credentials: 'include',
                     headers: { 'Content-Type': 'application/json' },

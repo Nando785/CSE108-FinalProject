@@ -2,11 +2,13 @@ import React from 'react';
 import styles from './header.module.css'
 import { useNavigate } from 'react-router-dom';
 
+const API = import.meta.env.VITE_API_URL;
+
 function Header() {
     const navigate = useNavigate();
 
     const handleLogout = async () => {
-        await fetch('/api/logout', {
+        await fetch(`${API}/api/logout`, {
             method: 'GET',
             credentials: 'include'
         });

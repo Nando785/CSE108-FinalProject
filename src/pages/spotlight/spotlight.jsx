@@ -6,6 +6,8 @@ import { useState, useEffect } from 'react';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
+const API = import.meta.env.VITE_API_URL;
+
 function Spotlight() {
     const postList = loadPosts();
     const [likedPosts, setLikedPosts] = useState({});
@@ -20,7 +22,7 @@ function Spotlight() {
 
     const toggleLike = async (postId) => {
         // API Call: Add/Remove a like from post in the database
-        const res = await fetch('/api/toggleLike', {
+        const res = await fetch(`${API}/api/toggleLike`, {
             method: 'POST',
             credentials: 'include',
             headers: {

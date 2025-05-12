@@ -3,6 +3,8 @@ import styles from './profile.module.css'
 import { loadData, loadPosts } from './useProfile.js';
 import { Sidebar, Header, FollowBar } from '../../components/index.js';
 
+const API = import.meta.env.VITE_API_URL;
+
 function Profile() {
     // Collect users data and every post made by them
     const userData = loadData();
@@ -22,7 +24,7 @@ function Profile() {
 
         try {
             //API Call: Change users bio content in database
-            const res = await fetch('/api/updateBio', {
+            const res = await fetch(`${API}/api/updateBio`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
@@ -67,7 +69,7 @@ function Profile() {
                                     formData.append('image', file);
 
                                     //API Call: Store new profile picture in database
-                                    const res = await fetch('/api/uploadProfilePicture', {
+                                    const res = await fetch(`${API}/api/uploadProfilePicture`, {
                                         method: 'POST',
                                         credentials: 'include',
                                         body: formData,

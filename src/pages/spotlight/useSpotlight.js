@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+const API = import.meta.env.VITE_API_URL;
 
 export function loadPosts() {
     // Set postList to fetchPosts return values
@@ -7,7 +8,7 @@ export function loadPosts() {
         const fetchPosts = async () => {
             try {
                 // API call: get 12 random posts from the database to display on the spotlight
-                const response = await fetch('/api/getRandomPosts', {
+                const response = await fetch(`${API}/api/getRandomPosts`, {
                     method: 'POST',
                     credentials: 'include',
                     headers: { 'Content-Type': 'application/json' },
