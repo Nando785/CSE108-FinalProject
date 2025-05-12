@@ -1,12 +1,21 @@
 {
   "version": 2,
   "builds": [
-    { "src": "fits-app/package.json", "use": "@vercel/static-build" },
-    { "src": "fits-app/api/index.py", "use": "@vercel/python" }
+    {
+      "src": "fits-app/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "fits-app/dist"
+      }
+    },
+    {
+      "src": "fits-app/api/index.py",
+      "use": "@vercel/python"
+    }
   ],
   "routes": [
     { "src": "/api/(.*)", "dest": "fits-app/api/index.py" },
     { "handle": "filesystem" },
-    { "src": "/(.*)", "dest": "fits-app/dist/index.html" }
+    { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
