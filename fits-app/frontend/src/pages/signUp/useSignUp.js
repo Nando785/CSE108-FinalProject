@@ -1,6 +1,6 @@
 export async function createNewUser(firstName, lastName, username, password) {
     try {
-        const response = await fetch('/register', {
+        const response = await fetch('api/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

@@ -22,7 +22,7 @@ function Camera() {
         formData.append('description', description);
 
         try {
-            const response = await fetch('/upload', {
+            const response = await fetch('api/upload', {
                 method: 'POST',
                 body: formData,
                 credentials: 'include',
