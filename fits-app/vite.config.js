@@ -22,5 +22,8 @@ export default defineConfig({
       '/logout': 'http://localhost:5000',
       '/searchUsers': 'http://localhost:5000',
     }
+  },
+  build: {
+    outDir: 'dist'
   }
 })
