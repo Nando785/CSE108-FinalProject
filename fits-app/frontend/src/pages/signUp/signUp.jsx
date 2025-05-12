@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './signup.module.css';
+import styles from './signUp.module.css';
 import {createNewUser} from './useSignUp.js';
 import { useNavigate } from 'react-router-dom';
 
