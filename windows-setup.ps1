@@ -1,9 +1,9 @@
 # Run in root directory
 
 # install react dependencies
-cd .\fits-app
+Set-Location .\fits-app
 npm install
-cd ..
+Set-Location ..
 
 # create virtual environment and enter it
 python -m venv .venv
