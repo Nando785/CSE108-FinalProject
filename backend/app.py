@@ -400,5 +400,82 @@ def toggle_like():
         return jsonify({'error': str(err)}), 500
 
 
+#========
+@app.route('/searchUsers', methods=['POST'])
+@login_required
+def search_users():
+    data = request.get_json()
+    search_term = data.get('query', '').strip()
+
+    if not search_term:
+        return jsonify({'results': []}), 200
+
+    conn = openConnection(DB_FILE)
+    cursor = conn.cursor()
+    
+    query = '''
+        SELECT u.u_userId, u.u_username, pp.pp_image,
+               EXISTS (
+                   SELECT 1 FROM follows f
+                   WHERE f.f_userId = ? AND f.f_followingId = u.u_userId
+               ) AS is_following
+        FROM user u
+        LEFT JOIN profilePictures pp ON u.u_userId = pp.pp_userId
+        WHERE u.u_username LIKE ?
+          AND u.u_userId != ?
+    '''
+    cursor.execute(query, (current_user.id, f'%{search_term}%', current_user.id))
+    rows = cursor.fetchall()
+    
+    results = []
+    for user_id, username, image, is_following in rows:
+        profile_image = b64encode(image).decode('utf-8') if image else None
+        results.append({
+            'userId': user_id,
+            'username': username,
+            'profileImage': profile_image,
+            'isFollowing': bool(is_following)
+        })
+
+    cursor.close()
+    closeConnection(conn, DB_FILE)
+    return jsonify({'results': results}), 200
+
+@app.route('/follow', methods=['POST'])
+@login_required
+def follow():
+    data = request.get_json()
+    target_id = data.get('targetId')
+
+    conn = openConnection(DB_FILE)
+    cursor = conn.cursor()
+    try:
+        cursor.execute('INSERT INTO follows (f_userId, f_followingId) VALUES (?, ?)', (current_user.id, target_id))
+        cursor.execute('UPDATE user SET u_followerCnt = u_followerCnt + 1 WHERE u_userId = ?', (target_id,))
+        cursor.execute('UPDATE user SET u_followingCnt = u_followingCnt + 1 WHERE u_userId = ?', (current_user.id,))
+        conn.commit()
+        return jsonify({'status': 'followed'}), 200
+    except sqlite3.IntegrityError:
+        return jsonify({'error': 'Already following'}), 400
+    finally:
+        cursor.close()
+        closeConnection(conn, DB_FILE)
+
+@app.route('/unfollow', methods=['POST'])
+@login_required
+def unfollow():
+    data = request.get_json()
+    target_id = data.get('targetId')
+
+    conn = openConnection(DB_FILE)
+    cursor = conn.cursor()
+    cursor.execute('DELETE FROM follows WHERE f_userId = ? AND f_followingId = ?', (current_user.id, target_id))
+    cursor.execute('UPDATE user SET u_followerCnt = u_followerCnt - 1 WHERE u_userId = ? AND u_followerCnt > 0', (target_id,))
+    cursor.execute('UPDATE user SET u_followingCnt = u_followingCnt - 1 WHERE u_userId = ? AND u_followingCnt > 0', (current_user.id,))
+    conn.commit()
+    cursor.close()
+    closeConnection(conn, DB_FILE)
+    return jsonify({'status': 'unfollowed'}), 200
+
 if __name__ == '__main__':
     app.run(debug=True)

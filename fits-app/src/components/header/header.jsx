@@ -16,7 +16,7 @@ function Header() {
     return(
         <div className={styles.source}>
             <div className={styles.titleContainer}>
-                Fitd.
+                Some App.
             </div>
             <div className={styles.buttonContainer}>
                 <button className={styles.button} onClick={handleLogout}>
