@@ -2,11 +2,11 @@
   "version": 2,
   "builds": [
     { "src": "fits-app/api/index.py", "use": "@vercel/python" },
-    { "src": "fits-app/frontend/package.json", "use": "@vercel/static-build" }
+    { "src": "fits-app/package.json", "use": "@vercel/static-build" }
   ],
   "routes": [
     { "src": "/api/(.*)", "dest": "fits-app/api/index.py" },
     { "handle": "filesystem" },
-    { "src": "/(.*)", "dest": "fits-app/frontend/dist/index.html" }
+    { "src": "/(.*)", "dest": "fits-app/dist/index.html" }
   ]
 }
