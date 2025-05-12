@@ -17,10 +17,17 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-CORS(app, supports_credentials=True, origins=[
-    "http://localhost:5173",
-    "https://cse-108-final-project-eta.vercel.app"
-])
+from urllib.parse import urlparse
+
+def is_vercel_origin(origin):
+    try:
+        parsed = urlparse(origin)
+        return parsed.netloc.endswith(".vercel.app")
+    except:
+        return False
+
+CORS(app, supports_credentials=True, origins=is_vercel_origin)
+
 
 DB_FILE = "database.sqlite"
 
