@@ -62,7 +62,7 @@ CREATE TABLE images (
 
 CREATE TABLE profilePictures (
     pp_pictureId integer PRIMARY KEY AUTOINCREMENT,
-    pp_userId interger,
+    pp_userId integer UNIQUE,
     pp_image blob,
     FOREIGN KEY (pp_userId) REFERENCES user(u_userId)
 );

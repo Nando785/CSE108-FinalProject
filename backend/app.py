@@ -7,6 +7,9 @@ from passlib.hash import bcrypt
 import sqlite3
 from sqlite3 import Error
 
+from base64 import b64encode
+import random
+
 app = Flask(__name__)
 app.secret_key = 'muchSecretVeryKey'
 
@@ -14,12 +17,6 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
-# CORS(app, supports_credentials=True)
-
-# app.config.update(
-#     SESSION_COOKIE_SAMESITE='Lax',  # Use 'None' with HTTPS
-#     SESSION_COOKIE_SECURE=False     # Only set to True if using HTTPS
-# )
 
 DB_FILE = "database.sqlite"
 
@@ -162,6 +159,12 @@ def upload():
         # Upload image to database
         cursor.execute('INSERT INTO images (i_userId, i_postId, i_image) VALUES (?, ?, ?)',
                   (user_id, post_id, image_data))
+        
+        # Increment post count
+        cursor.execute(
+            'UPDATE user SET u_postCnt = u_postCnt + 1 WHERE u_userId = ?',
+            (user_id,)
+        )
         conn.commit()
         closeConnection(conn, DB_FILE)
         return 'Image uploaded successfully', 200
@@ -187,13 +190,25 @@ def getUserData():
                         FROM user WHERE u_userId = ?;'''
         values = (user_id,)
         cursor.execute(query, values)
+        data = cursor.fetchone()
         
-        data = cursor.fetchall()
+        # Get profile picture
+        cursor.execute('''
+            SELECT pp_image FROM profilePictures WHERE pp_userId = ?
+        ''', (user_id,))
+        image_row = cursor.fetchone()
+        
+        # Store profile picture
+        profile_image = None
+        if image_row and image_row[0]:
+            from base64 import b64encode
+            profile_image = b64encode(image_row[0]).decode('utf-8')
+        
         print(data)
         
         closeConnection(conn, DB_FILE)
         
-        return jsonify({'data': data})
+        return jsonify({'data': data, 'profileImage': profile_image})
     except sqlite3.Error as err:
         return jsonify({'error': str(err)}), 500
 
@@ -207,6 +222,8 @@ def update_bio():
 
         conn = openConnection(DB_FILE)
         cursor = conn.cursor()
+        
+        # Change user bio in database
         cursor.execute('UPDATE user SET u_bio = ? WHERE u_userId = ?', (new_bio, user_id))
         conn.commit()
 
@@ -250,7 +267,6 @@ def getPosts():
         posts = cursor.fetchall()
 
         # Convert binary image data to base64 strings
-        from base64 import b64encode
         post_data = [
             {
                 'image': b64encode(row[0]).decode('utf-8'),
@@ -259,12 +275,130 @@ def getPosts():
             } for row in posts
         ]
 
+        # Return list of posts by user
         closeConnection(conn, DB_FILE)
         return jsonify({'posts': post_data}), 200
 
     except sqlite3.Error as err:
         return jsonify({'error': str(err)}), 500
 
-    
+@app.route('/uploadProfilePicture', methods=['POST'])
+@login_required
+def upload_profile_picture():
+    # Get image and user id
+    image_file = request.files.get('image')
+    user_id = current_user.id
+
+    if not image_file:
+        return jsonify({'error': 'No image provided'}), 400
+
+    image_data = image_file.read()
+    try:
+        conn = openConnection(DB_FILE)
+        cursor = conn.cursor()
+
+        # Replace existing image if one exists, insert new image if one doesn't
+        cursor.execute('''
+            INSERT INTO profilePictures (pp_userId, pp_image)
+            VALUES (?, ?)
+            ON CONFLICT(pp_userId) DO UPDATE SET pp_image=excluded.pp_image;
+        ''', (user_id, image_data))
+
+        conn.commit()
+        cursor.close()
+        closeConnection(conn, DB_FILE)
+
+        return jsonify({'message': 'Profile picture uploaded successfully'}), 200
+
+    except sqlite3.Error as err:
+        return jsonify({'error': str(err)}), 500
+      
+@app.route('/getRandomPosts', methods=['POST'])
+@login_required
+def getRandomPosts():
+    try:
+        conn = openConnection(DB_FILE)
+        cursor = conn.cursor()
+        
+        query = '''SELECT up_postId FROM userPosts'''
+        cursor.execute(query)
+        
+        post_list = cursor.fetchall()
+        post_ids = [row[0] for row in post_list]
+        
+        # Get 12 or less random posts
+        shuffled_ids = random.sample(post_ids, min(12, len(post_ids)))
+        posts = []
+        
+        # Collect post information for each post in post_id
+        for post_id in shuffled_ids:
+            cursor.execute('''
+                SELECT i.i_image, up.up_body, up.up_likeCnt,
+                    EXISTS (
+                        SELECT 1 FROM postLikes pl
+                        WHERE pl.pl_userId = ? AND pl.pl_postId = up.up_postId
+                    ) AS liked
+                FROM images i
+                JOIN userPosts up ON i.i_postId = up.up_postId
+                WHERE up.up_postId = ?
+                LIMIT 1
+            ''', (current_user.id, post_id))
+
+            row = cursor.fetchone()
+            if row:
+                posts.append({
+                    'postId': post_id,
+                    'image': b64encode(row[0]).decode('utf-8'),
+                    'description': row[1],
+                    'likeCnt': row[2],
+                    'liked': bool(row[3])
+                })
+
+        # Return list of row information
+        closeConnection(conn, DB_FILE)
+        return jsonify({'posts': posts}), 200
+        
+    except sqlite3.Error as err:
+        return jsonify({'error': str(err)}), 500
+
+@app.route('/toggleLike', methods=['POST'])
+@login_required
+def toggle_like():
+    try:
+        data = request.get_json()
+        post_id = data.get('postId')
+        user_id = current_user.id
+
+        if post_id is None:
+            return jsonify({'error': 'Missing postId'}), 400
+
+        conn = openConnection(DB_FILE)
+        cursor = conn.cursor()
+
+        # Check if user already liked this post
+        cursor.execute('''
+            SELECT 1 FROM postLikes WHERE pl_userId = ? AND pl_postId = ?
+        ''', (user_id, post_id))
+        already_liked = cursor.fetchone()
+
+        if already_liked:
+            # Unlike
+            cursor.execute('DELETE FROM postLikes WHERE pl_userId = ? AND pl_postId = ?', (user_id, post_id))
+            cursor.execute('UPDATE userPosts SET up_likeCnt = up_likeCnt - 1 WHERE up_postId = ? AND up_likeCnt > 0', (post_id,))
+            new_state = False
+        else:
+            # Like
+            cursor.execute('INSERT INTO postLikes (pl_userId, pl_postId) VALUES (?, ?)', (user_id, post_id))
+            cursor.execute('UPDATE userPosts SET up_likeCnt = up_likeCnt + 1 WHERE up_postId = ?', (post_id,))
+            new_state = True
+
+        conn.commit()
+        closeConnection(conn, DB_FILE)
+        return jsonify({'liked': new_state}), 200
+
+    except sqlite3.Error as err:
+        return jsonify({'error': str(err)}), 500
+
+
 if __name__ == '__main__':
     app.run(debug=True)

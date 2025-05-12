@@ -40,7 +40,6 @@
     justify-content: space-around;
     width: 80%;
     height: 90%;
-    /* background-color: #9BCC9E; */
     border-radius: 5px;
 }
 
@@ -61,7 +60,7 @@
 .description {
     width: 600px;
     height:100px;
-    background-color: #7851a9;
+    background-color: #112336;
     color: white;
     border-radius: 5px;
 }
@@ -72,7 +71,7 @@
 .postBtn {
     width:300px;
     height:50px;
-    background-color: #7851a9;
+    background-color: #112336;
     color: white;
     border-radius: 5px;
 }
@@ -80,7 +79,7 @@
 .imgInput {
     width: 600px;
     height: 300px;
-    background-color: #7851a9;
+    background-color: #112336;
     border-radius: 5px;
     display: flex;
     align-items: center;
@@ -93,6 +92,6 @@
 .imgPreview {
     width: 100%;
     height: 100%;
-    object-fit: contain; /* Entire image fits inside box */
+    object-fit: contain;
     border-radius: 5px;
 }
