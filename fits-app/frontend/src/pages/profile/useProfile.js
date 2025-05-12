@@ -8,7 +8,7 @@ export function loadData() {
         const fetchUserInfo = async () => {
             try {
                 //API call: Get current user info from database (Fname, Lname, Username, etc...)
-                const response = await fetch('http://localhost:5000/getInfo', {
+                const response = await fetch('/getInfo', {
                     method: 'POST',
                     credentials: 'include',
                 });
@@ -38,7 +38,7 @@ export function loadPosts() {
         const fetchPosts = async () => {
             try {
                 // API call: Fetch all posts by currect user
-                const response = await fetch('http://localhost:5000/getPosts', {
+                const response = await fetch('/getPosts', {
                     method: 'POST',
                     credentials: 'include',
                     headers: { 'Content-Type': 'application/json' },

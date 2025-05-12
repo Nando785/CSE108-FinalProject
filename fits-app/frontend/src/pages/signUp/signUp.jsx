@@ -15,7 +15,6 @@ function SignUp() {
     createNewUser(firstName, lastName, username, password);
     navigate('/');
     alert('Account sucessfully created, please login');
-    // console.log(username, password, firstName, lastName);
   };
 
   return (

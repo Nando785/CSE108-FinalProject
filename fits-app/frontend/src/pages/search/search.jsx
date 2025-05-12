@@ -17,7 +17,7 @@ function Search() {
         }
 
         try {
-            const response = await axios.post('http://localhost:5000/searchUsers', { query: value }, { withCredentials: true });
+            const response = await axios.post('/searchUsers', { query: value }, { withCredentials: true });
             setResults(response.data.results);
         } catch (error) {
             console.error(error);
@@ -27,9 +27,9 @@ function Search() {
     const handleToggleFollow = async (userId, isFollowing) => {
         try {
             if (isFollowing) {
-                await axios.post('http://localhost:5000/unfollow', { targetId: userId }, { withCredentials: true });
+                await axios.post('/unfollow', { targetId: userId }, { withCredentials: true });
             } else {
-                await axios.post('http://localhost:5000/follow', { targetId: userId }, { withCredentials: true });
+                await axios.post('/follow', { targetId: userId }, { withCredentials: true });
             }
 
             setResults(prev =>

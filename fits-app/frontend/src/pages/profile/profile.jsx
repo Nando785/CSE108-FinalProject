@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import styles from './profile.module.css'
-import { loadData, loadPosts } from './useProfile';
+import { loadData, loadPosts } from './useProfile.js';
 import { Sidebar, Header, FollowBar } from '../../components/index.js';
 
 function Profile() {
@@ -22,7 +22,7 @@ function Profile() {
 
         try {
             //API Call: Change users bio content in database
-            const res = await fetch('http://localhost:5000/updateBio', {
+            const res = await fetch('/updateBio', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
@@ -67,7 +67,7 @@ function Profile() {
                                     formData.append('image', file);
 
                                     //API Call: Store new profile picture in database
-                                    const res = await fetch('http://localhost:5000/uploadProfilePicture', {
+                                    const res = await fetch('/uploadProfilePicture', {
                                         method: 'POST',
                                         credentials: 'include',
                                         body: formData,

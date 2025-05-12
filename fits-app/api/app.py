@@ -16,7 +16,11 @@ app.secret_key = 'muchSecretVeryKey'
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
-CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
+
+CORS(app, supports_credentials=True, origins=[
+    "http://localhost:5173",
+    "https://your-frontend.vercel.app"
+])
 
 DB_FILE = "database.sqlite"
 

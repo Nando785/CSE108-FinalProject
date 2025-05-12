@@ -2,7 +2,6 @@
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    /* gap:20px; */
     align-items: center;
     background-color: #0D1B2A;
     height:100%;
