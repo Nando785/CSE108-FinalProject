@@ -13,7 +13,6 @@
       "use": "@vercel/python"
     }
   ],
-  
   "routes": [
     { "src": "/api/(.*)", "dest": "fits-app/api/index.py" },
     { "handle": "filesystem" },
