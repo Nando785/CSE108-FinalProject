@@ -6,6 +6,8 @@
   ],
   "routes": [
     { "src": "/api/(.*)", "dest": "fits-app/api/index.py" },
-    { "src": "/(.*)", "dest": "fits-app/frontend/index.html" }
+    { "src": "/assets/(.*)", "dest": "fits-app/frontend/dist/assets/$1" },
+    { "src": "/", "dest": "fits-app/frontend/dist/index.html" },
+    { "src": "/(.*)", "dest": "fits-app/frontend/dist/index.html" }
   ]
 }
