@@ -19,7 +19,7 @@ login_manager.login_view = 'login'
 
 CORS(app, supports_credentials=True, origins=[
     "http://localhost:5173",
-    "https://your-frontend.vercel.app"
+    "https://cse-108-final-project-eta.vercel.app"
 ])
 
 DB_FILE = "database.sqlite"
