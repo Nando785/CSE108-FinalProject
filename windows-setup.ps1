@@ -4,6 +4,10 @@
 Set-Location .\fits-app
 npm install
 Set-Location ..
+npm install @mui/icons-material @mui/material @emotion/styled @emotion/react
+npm install react-router-dom
+
+Set-Location ..
 
 # create virtual environment and enter it
 python -m venv .venv

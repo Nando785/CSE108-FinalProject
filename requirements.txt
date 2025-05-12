@@ -1,4 +1,7 @@
 flask
 flask-Login
-flask-CORS
+flask-cors
 flask-sqlalchemy
+
+passlib
+bcrypt
