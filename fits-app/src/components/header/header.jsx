@@ -16,7 +16,7 @@ function Header() {
     return(
         <div className={styles.source}>
             <div className={styles.titleContainer}>
-                Some App.
+                Insta-Fit
             </div>
             <div className={styles.buttonContainer}>
                 <button className={styles.button} onClick={handleLogout}>

@@ -24,7 +24,7 @@ function Login() {
   return(
   <div className={styles.loginWrapper}>
     <div className={styles.loginCard}>
-      <h1>Fitd.</h1>
+      <h1>Insta-Fit</h1>
       <input type="text" placeholder="Username" className={styles.loginInput} />
       <input type="password" placeholder="Password" className={styles.loginInput} />
       <button className={styles.loginButton} onClick={handleLogin}>Login</button>
