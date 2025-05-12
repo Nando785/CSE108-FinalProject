@@ -26,7 +26,7 @@ def is_vercel_origin(origin):
     except:
         return False
 
-CORS(app, supports_credentials=True, origins=is_vercel_origin)
+CORS(app, supports_credentials=True, origins=['https://.*\.vercel\.app', 'https://localhost:5173'])
 
 
 DB_FILE = "database.sqlite"
