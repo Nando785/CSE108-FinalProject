@@ -19,6 +19,8 @@ login_manager.login_view = 'login'
 
 from urllib.parse import urlparse
 
+from urllib.parse import urlparse
+
 def is_vercel_origin(origin):
     try:
         parsed = urlparse(origin)
@@ -26,7 +28,8 @@ def is_vercel_origin(origin):
     except:
         return False
 
-CORS(app, supports_credentials=True, origins=['https://.*\.vercel\.app', 'https://localhost:5173'])
+# CORS(app, supports_credentials=True, origins=[is_vercel_origin, 'https://localhost:5173'])
+CORS(app, supports_credentials=True, origins=is_vercel_origin)
 
 
 DB_FILE = "database.sqlite"

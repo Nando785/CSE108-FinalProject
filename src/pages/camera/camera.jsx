@@ -2,6 +2,8 @@ import { useRef, useState } from 'react'
 import styles from './camera.module.css'
 import { Sidebar, Header, FollowBar } from '../../components/index.js';
 
+const API = import.meta.env.VITE_API_URL;
+
 function Camera() {
     const [imagePreview, setImagePreview] = useState(null);
     const fileInputRef = useRef(null);
@@ -22,7 +24,7 @@ function Camera() {
         formData.append('description', description);
 
         try {
-            const response = await fetch('/api/upload', {
+            const response = await fetch(`${API}/api/upload`, {
                 method: 'POST',
                 body: formData,
                 credentials: 'include',
