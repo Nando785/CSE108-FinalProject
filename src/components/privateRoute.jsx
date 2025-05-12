@@ -6,7 +6,7 @@ function PrivateRoute({ children }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("/api/check-auth", {
+    fetch("/check-auth", {
       credentials: "include",
     })
       .then((res) => res.json())

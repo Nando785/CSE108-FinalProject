@@ -8,7 +8,7 @@ function Header() {
     const navigate = useNavigate();
 
     const handleLogout = async () => {
-        await fetch(`${API}/api/logout`, {
+        await fetch(`${API}/logout`, {
             method: 'GET',
             credentials: 'include'
         });

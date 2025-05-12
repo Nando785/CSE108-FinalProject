@@ -2,7 +2,7 @@ const API = import.meta.env.VITE_API_URL;
 
 export async function createNewUser(firstName, lastName, username, password) {
     try {
-        const response = await fetch(`${API}/api/register`, {
+        const response = await fetch(`${API}/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

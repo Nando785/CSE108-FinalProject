@@ -8,7 +8,7 @@ export function loadPosts() {
         const fetchPosts = async () => {
             try {
                 // API call: get 12 random posts from the database to display on the spotlight
-                const response = await fetch(`${API}/api/getRandomPosts`, {
+                const response = await fetch(`${API}/getRandomPosts`, {
                     method: 'POST',
                     credentials: 'include',
                     headers: { 'Content-Type': 'application/json' },

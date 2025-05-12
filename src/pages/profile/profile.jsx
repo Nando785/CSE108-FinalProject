@@ -24,7 +24,7 @@ function Profile() {
 
         try {
             //API Call: Change users bio content in database
-            const res = await fetch(`${API}/api/updateBio`, {
+            const res = await fetch(`${API}/updateBio`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
@@ -69,7 +69,7 @@ function Profile() {
                                     formData.append('image', file);
 
                                     //API Call: Store new profile picture in database
-                                    const res = await fetch(`${API}/api/uploadProfilePicture`, {
+                                    const res = await fetch(`${API}/uploadProfilePicture`, {
                                         method: 'POST',
                                         credentials: 'include',
                                         body: formData,

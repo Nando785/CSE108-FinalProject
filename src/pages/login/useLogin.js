@@ -2,7 +2,7 @@ const API = import.meta.env.VITE_API_URL;
 
 export async function validateLogin(username, password) {
   try {
-    const response = await fetch(`${API}/api/login`, {
+    const response = await fetch(`${API}/login`, {
       method: "POST",
       credentials: "include",
       headers: {
