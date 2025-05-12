@@ -20,7 +20,7 @@ function Spotlight() {
 
     const toggleLike = async (postId) => {
         // API Call: Add/Remove a like from post in the database
-        const res = await fetch('api/toggleLike', {
+        const res = await fetch('/api/toggleLike', {
             method: 'POST',
             credentials: 'include',
             headers: {

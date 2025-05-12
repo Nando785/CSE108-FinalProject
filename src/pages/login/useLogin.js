@@ -1,6 +1,6 @@
 export async function validateLogin(username, password) {
   try {
-    const response = await fetch("api/login", {
+    const response = await fetch("/api/login", {
       method: "POST",
       credentials: "include",
       headers: {
